@@ -1,0 +1,60 @@
+/*
+
+SPI protokol
+	4 PINSKA POVEZAVA:	
+	- full duplex
+	- cs - chip select (odabir naprave s kojom komuniciramo) - obavezno na HIGH na početku
+	- mosi - master out, slave in - master šalje podatke slaveu
+	- miso - master in, slave out - slave šalje podatke masteru
+	- clk - clock - vrijeme, služi nam za sinkronizaciju
+
+	- moguća komunikacija jednoga prema više, dijele 3 veze: clk, miso, mosi
+	- master naprava mora imati za svaku napravu 'chip select' pin
+
+	3 PINSKA POVEZAVA:
+	- cs, clk, siso
+
+
+	- SPI se upotrebljava na kraćim udaljenostima
+	bit baging? 
+
+	- 5V napajanje, GND, 3 pina (po vlastitom izboru)
+	- u programu koristiti cijele broje, ne double ili float
+	- možemo koristiti naredbu sprintf
+		char buf[20];
+		sprintf(buf, "%d.%04d\n\n\0", celi, realni);
+
+
+
+UART/USART protokol
+	- rx, tx, gnd
+	- 969 str. u dokumentaciji za procesor
+	- baud rate (BRR - baud-rate registar)
+	- nekoliko standardiziranih brzina - 4800, 9600, 115200,....
+	- za izračun baud-rate-a u poglavlju 30.3.4. Fractional baud rate generation
+	- vremenska linija protokola (od start bita do parity i stop bitova) se nalazi na strani 995
+	- paritet - ako je parni paritet, onda pišemo jedinicu ako ostale jedinice s njom čine paran broj jedinica !
+	- REGISTRI:
+		- statusni register (SR) - koristimo ga da provjerimo je li znak poslan (beri bit dokler se znak ne pošlje)
+		- data register (DR) - u taj registar moramo upisati znak koji bi htjeli poslati, jedan bajt
+		- BRR
+		- CR1
+			- M bit - govori o konfiguraciji, moramo gledati tabelu 30.3.7
+			- PCE bit:
+				- PS - parity selection
+				- podesiti enable i još nešto
+		- CR2
+			- stop bit
+
+	- potrebno je enablati UART -> USART1 je povezan preko USB-a na PC
+	- USART ima RX i TX na PA9 i PA10 pinovima ( za te pinove moramo MODER postaviti na 10 - Alternate function mode) !
+	- stranica 275. - usart 1 ima alternate function 7 -> moramo upisati u registar koji je opisan u 8.4.10 GPIOx_AFRH
+	- paziti da se odabere AF7 - Altenate function 7
+	- USART_TypeDef
+	- GPIO -> AFR[0] - low
+			  AFR[1] - high
+	zadatak: sa senzora koji komunicira preko SPI-ja čitati podatke poslati na komp preko UART-a (u obliku niza znakova / stringa)
+
+	-REALTERM - terminal kojeg moramo koristiti
+
+*/
